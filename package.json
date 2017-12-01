@@ -5,19 +5,22 @@
   "main": "index.js",
   "scripts": {
     "test": "npm run lint && nyc mocha",
-    "lint": "eslint *.js test/**/*.js src/**/*.js lib/**/*.js "
+    "lint": "eslint *.js test/**/*.js src/**/*.js lib/**/*.js ",
+    "coverage": "nyc report --reporter=text-lcov | coveralls && nyc report --reporter=text-lcov | codeclimate-test-reporter"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "huejay": "^1.7.3",
-    "nyc": "^11.3.0",
     "rc": "^1.2.2"
   },
   "devDependencies": {
     "apc-style": "^0.4.3",
     "chai": "^4.1.2",
+    "codeclimate-test-reporter": "^0.5.0",
+    "coveralls": "^3.0.0",
     "mocha": "^4.0.1",
+    "nyc": "^11.3.0",
     "sinon": "^4.1.2",
     "sinon-chai": "^2.14.0"
   },
