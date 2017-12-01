@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "eslint **/*.js && nyc mocha"
+    "test": "npm run lint && nyc mocha",
+    "lint": "eslint *.js test/**/*.js src/**/*.js lib/**/*.js "
   },
   "author": "",
   "license": "ISC",
@@ -19,5 +20,37 @@
     "mocha": "^4.0.1",
     "sinon": "^4.1.2",
     "sinon-chai": "^2.14.0"
+  },
+  "nyc": {
+    "include": [
+      "src/**/*.js"
+    ],
+    "all": true,
+    "watermarks": {
+      "lines": [
+        90,
+        99
+      ],
+      "functions": [
+        90,
+        99
+      ],
+      "branches": [
+        90,
+        99
+      ],
+      "statements": [
+        90,
+        99
+      ]
+    },
+    "reporter": [
+      "clover",
+      "text",
+      "text-summary",
+      "html",
+      "cobertura"
+    ],
+    "cache": true
   }
 }

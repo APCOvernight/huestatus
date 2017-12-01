@@ -47,7 +47,6 @@ class Hue extends BaseClass {
     this.log(`Retrieved bridge ${bridge.name}`)
     this.log(`  Id: ${bridge.id}`)
     this.log(`  Model Id: ${bridge.modelId}`)
-    this.log(`  Model Name: ${bridge.model.name}`)
 
     return bridge
   }
@@ -72,7 +71,7 @@ class Hue extends BaseClass {
       const moduleConfig = this.config.modules[moduleName]
 
       try {
-        const Module = require('./' + moduleName)
+        const Module = require(moduleName)
         const lamp = this.lampsArray.filter(lamp => lamp.name === moduleConfig.light)[0]
 
         const instance = new Module(moduleConfig, lamp)
