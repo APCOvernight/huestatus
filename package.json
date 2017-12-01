@@ -1,0 +1,23 @@
+{
+  "name": "huestatus",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "eslint **/*.js && nyc mocha"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "huejay": "^1.7.3",
+    "nyc": "^11.3.0",
+    "rc": "^1.2.2"
+  },
+  "devDependencies": {
+    "apc-style": "^0.4.3",
+    "chai": "^4.1.2",
+    "mocha": "^4.0.1",
+    "sinon": "^4.1.2",
+    "sinon-chai": "^2.14.0"
+  }
+}

@@ -1,0 +1,24 @@
+files:
+  include: '**/*.s+(a|c)ss'
+  ignore:
+    - 'node_modules/**'
+options:
+  formatter: stylish
+  max-warnings: 0
+  cache-config: true
+rules:
+  indentation:
+    - 1
+  placeholder-in-extend: 0
+  nesting-depth:
+    - 1
+    - max-depth: 3
+  property-sort-order:
+    - 1
+    - order: smacss
+  url-quotes: 0
+  force-attribute-nesting: 0
+  force-pseudo-nesting: 0
+  force-element-nesting: 0
+  empty-args: 0
+  attribute-quotes: 0
