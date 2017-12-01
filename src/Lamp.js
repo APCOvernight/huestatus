@@ -9,6 +9,8 @@ class Lamp extends BaseClass {
     this.lights = lights
     this.name = light.name
 
+    this.isDirty = false
+
     this._saveState()
 
     this.log(`  💡  ${this.name} is ${!this.light.reachable ? 'not ' : ''}reachable ${this.light.reachable ? '✅' : '⛔️'}`)
@@ -23,15 +25,15 @@ class Lamp extends BaseClass {
     }
   }
 
-  async setStatus (status) {
+  async _setStatus (status) {
     // Check status to decide if we need to save or can't override
 
     const settings = status ? this.config.hue.statuses[status] : this.initialState
 
-    await this.save(settings)
+    await this._save(settings)
   }
 
-  async save (settings) {
+  async _save (settings) {
     this.light.hue = settings.hue
     this.light.saturation = settings.saturation
     this.light.brightness = settings.brightness
@@ -39,28 +41,28 @@ class Lamp extends BaseClass {
 
     await this.lights.save(this.light)
 
-    this.isDirty = 1
+    this.isDirty = true
   }
 
   async alert (message) {
-    await this.setStatus('alert')
+    await this._setStatus('alert')
   }
 
   async warning (message) {
-    await this.setStatus('warning')
+    await this._setStatus('warning')
   }
 
   async ok (message) {
-    await this.setStatus('ok')
+    await this._setStatus('ok')
   }
 
   async working (message) {
-    await this.setStatus('working')
+    await this._setStatus('working')
   }
 
   async reset () {
     if (this.isDirty) {
-      await this.setStatus()
+      await this._setStatus()
     }
   }
 }

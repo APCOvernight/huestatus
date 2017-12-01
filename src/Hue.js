@@ -77,10 +77,12 @@ class Hue extends BaseClass {
         const instance = new Module(moduleConfig, lamp)
 
         modules.push(instance)
+
+        this.log(`${moduleName} module loaded`)
       } catch (e) {
         // Throw nice errors here
-
-        console.error(e)
+        console.error(e.message)
+        throw e
       }
     })
 
