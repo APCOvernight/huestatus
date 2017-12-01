@@ -4,7 +4,14 @@ const Huejay = require('huejay')
 const BaseClass = require('./Class')
 const Lamp = require('./Lamp')
 
+/**
+ * Represents a Hue Bridge
+ * @extends BaseClass
+ */
 class Hue extends BaseClass {
+  /**
+   * @param  {Object} config Configuration
+   */
   constructor (config) {
     super(config)
     this.log(`Loaded Config from ${config.config}:\n`, config)
@@ -17,30 +24,49 @@ class Hue extends BaseClass {
     })
   }
 
+  /**
+   * Load the bridge, lights and modules
+   */
   async init () {
     this.bridge = await this._getBridge()
     this.lamps = await this._getLamps()
     this.modules = await this._loadModules()
   }
 
+  /**
+   * get lamps as an array
+   * @return {Array}
+   */
   get lampsArray () {
     const lampsArray = []
     Object.keys(this.lamps).map(lampName => { lampsArray.push(this.lamps[lampName]) })
     return lampsArray
   }
 
+  /**
+   * Reset all lamps
+   * @return {Promise}
+   */
   async stop () {
     await Promise.all(this.lampsArray.map(async lamp => {
       await lamp.reset()
     }))
   }
 
+  /**
+   * Fire the start method on all modules
+   * @return {Promise}
+   */
   async start () {
     await Promise.all(this.modules.map(async module => {
       await module.start()
     }))
   }
 
+  /**
+   * Get bridge debug info
+   * @return {Object}
+   */
   async _getBridge () {
     const bridge = await this.connection.bridge.get()
 
@@ -51,6 +77,10 @@ class Hue extends BaseClass {
     return bridge
   }
 
+  /**
+   * Get all lamps connected to bridge
+   * @return {Object} Lamps indexed by name
+   */
   async _getLamps () {
     const lamps = {}
     const lights = await this.connection.lights.getAll()
@@ -64,6 +94,10 @@ class Hue extends BaseClass {
     return lamps
   }
 
+  /**
+   * Load all modules defined in config
+   * @return {Array}
+   */
   async _loadModules () {
     const modules = []
 
