@@ -1,7 +1,7 @@
 {
   "name": "huestatus",
   "version": "0.1.0",
-  "description": "",
+  "description": "Modular status light system for use with Philips Hue devices",
   "main": "index.js",
   "scripts": {
     "test": "npm run lint && nyc mocha",
@@ -9,8 +9,8 @@
     "coverage": "nyc report --reporter=text-lcov | coveralls && nyc report --reporter=text-lcov | codeclimate-test-reporter",
     "stryker": "stryker run"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Ian Egner <https://twitter.com/ianegner>",
+  "license": "MIT",
   "dependencies": {
     "huejay": "^1.7.3",
     "rc": "^1.2.2",
