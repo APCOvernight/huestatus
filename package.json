@@ -1,6 +1,6 @@
 {
   "name": "huestatus",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -33,6 +33,10 @@
     "stryker-javascript-mutator": "^0.2.3",
     "stryker-mocha-framework": "^0.7.1",
     "stryker-mocha-runner": "^0.10.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/APCOvernight/huestatus.git"
   },
   "bin": {
     "huestatus": "./index.js"
