@@ -1,7 +1,9 @@
-# Modular status light system for use with Philips Hue devices
+# HueStatus
 
 [![NPM Package](https://img.shields.io/npm/v/huestatus.svg?maxAge=2592000)](npmjs.com/package/huestatus) ![License](https://img.shields.io/npm/l/huestatus.svg) [![Build Status](https://travis-ci.org/APCOvernight/huestatus.svg?branch=master)](https://travis-ci.org/APCOvernight/huestatus) [![Coverage Status](https://coveralls.io/repos/github/APCOvernight/huestatus/badge.svg?branch=master)](https://coveralls.io/github/APCOvernight/huestatus?branch=master) [![Maintainability](	https://img.shields.io/codeclimate/maintainability/APCOvernight/huestatus.svg)](https://codeclimate.com/github/APCOvernight/huestatus/maintainability) 
 [![Dependencies](https://img.shields.io/david/APCOvernight/huestatus.svg)](https://david-dm.org/APCOvernight/huestatus)[![Greenkeeper badge](https://badges.greenkeeper.io/APCOvernight/huestatus.svg)](https://greenkeeper.io/)
+
+Modular status light system for use with Philips Hue devices
 
 ## Features
 - Set a philips hue light to one of 4 statuses (Ok, Warning, Building, Alert)
