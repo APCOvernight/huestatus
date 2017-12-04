@@ -97,6 +97,8 @@ class Hue extends BaseClass {
   /**
    * Load all modules defined in config
    * @return {Array}
+   * @throws Error if module cannot be loaded
+   * @throws Error if module is not an instance of Base Module
    */
   async _loadModules () {
     const modules = []
@@ -118,7 +120,6 @@ class Hue extends BaseClass {
 
         this.log(`${module.name} module loaded`)
       } catch (e) {
-        // Throw nice errors here
         console.info(e.message)
         throw e
       }

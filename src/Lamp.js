@@ -44,6 +44,10 @@ class Lamp extends BaseClass {
     }
   }
 
+  /**
+   * Register instance of a module against the lamp so status can be stored against it
+   * @param  {String} instanceName
+   */
   registerModuleInstance (instanceName) {
     if (this.modules[instanceName]) {
       throw new Error(`Module with instanceName of ${instanceName} already registered`)
@@ -52,6 +56,13 @@ class Lamp extends BaseClass {
     this.modules[instanceName] = { status: null }
   }
 
+  /**
+   * Update the stored status for an instance and fire _updateStatus
+   * @param  {String}  instanceName
+   * @param  {String}  status       The status to update it to
+   * @param  {String}  message      Message to be logged
+   * @return {Promise}
+   */
   async _updateModuleStatus (instanceName, status, message) {
     if (!this.modules[instanceName]) {
       throw new Error(`Module with instanceName of ${instanceName} not registered`)
@@ -65,6 +76,11 @@ class Lamp extends BaseClass {
     await this._updateStatus()
   }
 
+  /**
+   * Decide which status to show on the lamp
+   * @param  {Array.String} statuses Current statuses
+   * @return {String}                Status with highest precidence
+   */
   _worstCaseScenario (statuses) {
     let worstCase = Lamp.statusPrecedence.length
 
@@ -77,6 +93,10 @@ class Lamp extends BaseClass {
     return Lamp.statusPrecedence[worstCase]
   }
 
+  /**
+   * If the status has changed, send the new status to the light
+   * @return {Promise}
+   */
   async _updateStatus () {
     const status = this._worstCaseScenario(Object.keys(this.modules).map(moduleName => this.modules[moduleName].status))
 
