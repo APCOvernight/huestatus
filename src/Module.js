@@ -2,7 +2,7 @@
 
 const uuidv4 = require('uuid/v4')
 
-class mockModule {
+class BaseModule {
   constructor (config, emitter) {
     this.config = config
     this.emitter = emitter
@@ -21,4 +21,4 @@ class mockModule {
   }
 }
 
-module.exports = mockModule
+module.exports = BaseModule
