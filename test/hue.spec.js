@@ -183,6 +183,32 @@ describe('Hue Class', () => {
     mockConfig.debug = false
   })
 
+  it('Throws when the module does not extend base module', async () => {
+    mockConfig.debug = true
+    mockConfig.modules = [
+      {
+        name: '../test/bad-mock-module',
+        light: 'My first light'
+      }
+    ]
+
+    const hue = new Hue(mockConfig)
+
+    connectionMock = sinon.stub(hue.connection.lights, 'getAll').resolves([{
+      name: 'My first light'
+    }])
+
+    try {
+      await hue.init()
+      expect(0).to.equal(1)
+    } catch (e) {
+      expect(e.message).to.equal('../test/bad-mock-module does not extend the Base Module (\'huestatus/src/Module\')')
+    }
+
+    mockConfig.modules = []
+    mockConfig.debug = false
+  })
+
   it('Fire reset on all lamps on stop', async () => {
     const hue = new Hue(mockConfig)
     connectionMock = sinon.stub(hue.connection.lights, 'getAll').resolves([{

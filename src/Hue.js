@@ -108,6 +108,10 @@ class Hue extends BaseClass {
 
         const instance = new Module(module, lamp.eventEmitter)
 
+        if (!(instance instanceof require('../src/Module'))) {
+          throw new Error(`${module.name} does not extend the Base Module ('huestatus/src/Module')`)
+        }
+
         lamp.registerModuleInstance(instance.instanceName)
 
         modules.push(instance)
