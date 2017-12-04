@@ -1,0 +1,44 @@
+{
+  "hue": {
+    "host": "192.168.0.2",
+    "port": 80,
+    "username": "",
+    "timeout": 2000,
+    "statuses": {
+      "alert": {
+        "hue": 0,
+        "brightness": 255,
+        "flashing": true
+      },
+      "ok": {
+        "hue": 25500,
+        "flashing": false
+      },
+      "warning": {
+        "hue": 12750,
+        "flashing": false
+      },
+      "working": {
+        "hue": 46920,
+        "brightness": 155,
+        "saturation": 155,
+        "flashing": false
+      }
+    }
+  },
+  "modules": [
+    {
+      "name": "huekins",
+      "url": "http://jenkins/",
+      "job": "MyJob/Develop",
+      "light": "Hue color lamp 1"
+    }, {
+      "name": "huetry",
+      "sentryApiKey": "3abxxxxxxxxxxxxxxxxx0f5",
+      "project": "",
+      "organisation": "",
+      "light": "Hue color lamp 2"
+    }
+  ],
+  "debug": true
+}
