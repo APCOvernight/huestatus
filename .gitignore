@@ -3,3 +3,5 @@ node_modules
 .huerc
 .nyc_output
 coverage
+.stryker-tmp
+reports

@@ -6,7 +6,8 @@
   "scripts": {
     "test": "npm run lint && nyc mocha",
     "lint": "eslint *.js test/**/*.js src/**/*.js lib/**/*.js ",
-    "coverage": "nyc report --reporter=text-lcov | coveralls && nyc report --reporter=text-lcov | codeclimate-test-reporter"
+    "coverage": "nyc report --reporter=text-lcov | coveralls && nyc report --reporter=text-lcov | codeclimate-test-reporter",
+    "stryker": "stryker run"
   },
   "author": "",
   "license": "ISC",
@@ -24,7 +25,14 @@
     "mocha": "^4.0.1",
     "nyc": "^11.3.0",
     "sinon": "^4.1.2",
-    "sinon-chai": "^2.14.0"
+    "sinon-chai": "^2.14.0",
+    "stryker": "^0.15.4",
+    "stryker-api": "^0.11.0",
+    "stryker-baseline-reporter": "^1.1.0",
+    "stryker-html-reporter": "^0.11.2",
+    "stryker-javascript-mutator": "^0.2.3",
+    "stryker-mocha-framework": "^0.7.1",
+    "stryker-mocha-runner": "^0.10.1"
   },
   "bin": {
     "huestatus": "./index.js"
