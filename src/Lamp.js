@@ -1,6 +1,7 @@
 'use strict'
 
 const BaseClass = require('./Class')
+const events = require('events')
 
 class Lamp extends BaseClass {
   /**
@@ -16,9 +17,16 @@ class Lamp extends BaseClass {
 
     this.isDirty = false
 
+    this.modules = {}
+
+    this.eventEmitter = new events.EventEmitter()
+    this.eventEmitter.on('change', this._updateModuleStatus.bind(this))
+
     this.initialState = this._getState()
 
     this.log(`  💡  ${this.name} is ${!this.light.reachable ? 'not ' : ''}reachable ${this.light.reachable ? '✅' : '⛔️'}`)
+
+    this.statusPrecedence = ['alert', 'warning', 'working', 'ok']
   }
 
   /**
@@ -34,19 +42,50 @@ class Lamp extends BaseClass {
     }
   }
 
+  registerModule (moduleName) {
+    this.modules[moduleName] = { status: null }
+  }
+
+  async _updateModuleStatus (moduleName, status, message) {
+    this.modules[moduleName].status = status
+    this.modules[moduleName].lastMessage = message
+
+    this.log(`${this.moduleName}: ${message}`)
+
+    await this._updateStatus()
+  }
+
+  _worstCaseScenario (statuses) {
+    let worstCase = this.statusPrecedence.length
+
+    statuses.map(status => {
+      if (this.statusPrecedence.includes(status)) {
+        worstCase = Math.min(worstCase, this.statusPrecedence.indexOf(status))
+      }
+    })
+
+    return this.statusPrecedence[worstCase]
+  }
+
+  async _updateStatus () {
+    const status = this._worstCaseScenario(Object.keys(this.modules).map(moduleName => this.modules[moduleName].status))
+
+    if (status !== this.status) {
+      await this._setStatus(status)
+    }
+  }
+
   /**
    * Set a lamp to a status and save. If no status given it will reset to initial
    * @param  {String}  [status] The name of the status
    * @return {Promise}
    */
   async _setStatus (status) {
-    // TODO Check current status to decide if we need to save or can't override
-
     const settings = status ? this.config.hue.statuses[status] : this.initialState
 
     await this._save(settings)
 
-    // TODO set current status
+    this.status = status
   }
 
   /**

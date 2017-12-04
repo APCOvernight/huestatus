@@ -149,7 +149,7 @@ describe('Hue Class', () => {
     await hue.init()
 
     expect(hue.modules.length).to.equal(1)
-    expect(hue.modules[0].light).to.be.an('object')
+    expect(hue.modules[0].emitter).to.be.an('object')
     expect(hue.modules[0].config).to.be.an('object')
     expect(hue.modules[0].config).to.deep.equal(mockConfig.modules['../test/mock-module'])
 

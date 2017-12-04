@@ -121,3 +121,25 @@ describe('Lamp Class', () => {
     expect(saveMock).to.not.be.called
   })
 })
+
+describe('Status Precedence tests', function () {
+  it('if the statuses are OK, ALERT, then the status should become ALERT', async () => {
+    const newStatus = new Lamp(mockConfig, lightMock, lightsMock)._worstCaseScenario(['ok', 'alert'])
+    expect(newStatus).to.equal('alert')
+  })
+
+  it('if the statuses are OK, WORKING then the status should become WORKING', async () => {
+    const newStatus = new Lamp(mockConfig, lightMock, lightsMock)._worstCaseScenario(['ok', 'working'])
+    expect(newStatus).to.equal('working')
+  })
+
+  it('if the statuses are OK, WORKING and WARNING then the status should become WARNING', async () => {
+    const newStatus = new Lamp(mockConfig, lightMock, lightsMock)._worstCaseScenario(['ok', 'working', 'warning'])
+    expect(newStatus).to.equal('warning')
+  })
+
+  it('if the statuses are OK, WORKING, ALERT and WARNING then the status should become ALERT', async () => {
+    const newStatus = new Lamp(mockConfig, lightMock, lightsMock)._worstCaseScenario(['ok', 'working', 'alert', 'warning'])
+    expect(newStatus).to.equal('alert')
+  })
+})

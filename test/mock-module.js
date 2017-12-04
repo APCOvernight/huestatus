@@ -1,11 +1,8 @@
 'use strict'
 
-class mockModule {
-  constructor (config, light) {
-    this.config = config
-    this.light = light
-  }
+const Module = require('../src/Module')
 
+class mockModule extends Module {
   async start () {
 
   }
