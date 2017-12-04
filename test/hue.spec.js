@@ -159,7 +159,7 @@ describe('Hue Class', () => {
     mockConfig.debug = false
   })
 
-  it('Load modules on init', async () => {
+  it('Throws when the module cannot be found', async () => {
     mockConfig.debug = true
     mockConfig.modules = [
       {

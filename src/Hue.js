@@ -103,7 +103,7 @@ class Hue extends BaseClass {
 
     this.config.modules.map(module => {
       try {
-        const Module = require(module.name)
+        const Module = require(require('requireg').resolve(module.name) || module.name)
         const lamp = this.lampsArray.filter(lamp => lamp.name === module.light)[0]
 
         const instance = new Module(module, lamp.eventEmitter)
