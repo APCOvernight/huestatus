@@ -106,9 +106,9 @@ class Hue extends BaseClass {
         const Module = require(module.name)
         const lamp = this.lampsArray.filter(lamp => lamp.name === module.light)[0]
 
-        const instance = new Module(module, lamp.eventEmitter, module.name)
+        const instance = new Module(module, lamp.eventEmitter)
 
-        lamp.registerModule(module.name)
+        lamp.registerModuleInstance(instance.instanceName)
 
         modules.push(instance)
 

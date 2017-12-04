@@ -42,15 +42,17 @@ class Lamp extends BaseClass {
     }
   }
 
-  registerModule (moduleName) {
-    this.modules[moduleName] = { status: null }
+  registerModuleInstance (instanceName) {
+    this.modules[instanceName] = { status: null }
   }
 
-  async _updateModuleStatus (moduleName, status, message) {
-    this.modules[moduleName].status = status
-    this.modules[moduleName].lastMessage = message
+  async _updateModuleStatus (instanceName, status, message) {
+    // Throw here if module name not found
 
-    this.log(`${this.moduleName}: ${message}`)
+    this.modules[instanceName].status = status
+    this.modules[instanceName].lastMessage = message
+
+    this.log(`${this.instanceName}: ${message}`)
 
     await this._updateStatus()
   }

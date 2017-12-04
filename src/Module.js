@@ -1,14 +1,19 @@
 'use strict'
 
+const uuidv4 = require('uuid/v4')
+
 class mockModule {
-  constructor (config, emitter, name) {
+  constructor (config, emitter) {
     this.config = config
     this.emitter = emitter
-    this.name = name
+  }
+
+  get instanceName () {
+    return uuidv4()
   }
 
   async change (status, message) {
-    await this.emitter.emit('change', this.name, status, message)
+    await this.emitter.emit('change', this.instanceName, status, message)
   }
 
   async start () {
