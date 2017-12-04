@@ -26,6 +26,9 @@
     "sinon": "^4.1.2",
     "sinon-chai": "^2.14.0"
   },
+  "bin": {
+    "huestatus": "./index.js"
+  },
   "nyc": {
     "include": [
       "src/**/*.js"
