@@ -16,9 +16,7 @@ const mockConfig = {
 
     }
   },
-  modules: {
-
-  },
+  modules: [],
   debug: false
 }
 
@@ -135,11 +133,12 @@ describe('Hue Class', () => {
 
   it('Load modules on init', async () => {
     mockConfig.debug = true
-    mockConfig.modules = {
-      '../test/mock-module': {
+    mockConfig.modules = [
+      {
+        name: '../test/mock-module',
         light: 'My first light'
       }
-    }
+    ]
 
     const hue = new Hue(mockConfig)
     connectionMock = sinon.stub(hue.connection.lights, 'getAll').resolves([{
@@ -151,22 +150,23 @@ describe('Hue Class', () => {
     expect(hue.modules.length).to.equal(1)
     expect(hue.modules[0].emitter).to.be.an('object')
     expect(hue.modules[0].config).to.be.an('object')
-    expect(hue.modules[0].config).to.deep.equal(mockConfig.modules['../test/mock-module'])
+    expect(hue.modules[0].config).to.deep.equal(mockConfig.modules[0])
 
     expect(consoleMock).to.be.calledWith('../test/mock-module module loaded')
 
     connectionMock.restore()
-    mockConfig.modules = {}
+    mockConfig.modules = []
     mockConfig.debug = false
   })
 
   it('Load modules on init', async () => {
     mockConfig.debug = true
-    mockConfig.modules = {
-      'null': {
+    mockConfig.modules = [
+      {
+        name: 'null',
         light: 'My first light'
       }
-    }
+    ]
 
     const hue = new Hue(mockConfig)
 
@@ -177,7 +177,7 @@ describe('Hue Class', () => {
       expect(e.message).to.equal('Cannot find module \'null\'')
     }
 
-    mockConfig.modules = {}
+    mockConfig.modules = []
     mockConfig.debug = false
   })
 
@@ -199,11 +199,12 @@ describe('Hue Class', () => {
   })
 
   it('Modules get started on start', async () => {
-    mockConfig.modules = {
-      '../test/mock-module': {
+    mockConfig.modules = [
+      {
+        name: '../test/mock-module',
         light: 'My first light'
       }
-    }
+    ]
 
     const hue = new Hue(mockConfig)
     connectionMock = sinon.stub(hue.connection.lights, 'getAll').resolves([{
@@ -221,6 +222,6 @@ describe('Hue Class', () => {
     hue.modules[0].start.restore
 
     connectionMock.restore()
-    mockConfig.modules = {}
+    mockConfig.modules = []
   })
 })

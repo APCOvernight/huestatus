@@ -101,20 +101,18 @@ class Hue extends BaseClass {
   async _loadModules () {
     const modules = []
 
-    Object.keys(this.config.modules).map(moduleName => {
-      const moduleConfig = this.config.modules[moduleName]
-
+    this.config.modules.map(module => {
       try {
-        const Module = require(moduleName)
-        const lamp = this.lampsArray.filter(lamp => lamp.name === moduleConfig.light)[0]
+        const Module = require(module.name)
+        const lamp = this.lampsArray.filter(lamp => lamp.name === module.light)[0]
 
-        const instance = new Module(moduleConfig, lamp.eventEmitter, moduleName)
+        const instance = new Module(module, lamp.eventEmitter, module.name)
 
-        lamp.registerModule(moduleName)
+        lamp.registerModule(module.name)
 
         modules.push(instance)
 
-        this.log(`${moduleName} module loaded`)
+        this.log(`${module.name} module loaded`)
       } catch (e) {
         // Throw nice errors here
         console.error(e.message)
