@@ -62,6 +62,7 @@ describe('Lamp Class', () => {
 
     expect(lamp.isDirty).to.be.true
     expect(lamp.light.hue).to.equal(require('../lib/default-config').hue.statuses.alert.hue)
+    expect(lamp.light.alert).to.equal('lselect')
     expect(saveMock).to.be.calledOnce
   })
 
@@ -86,6 +87,7 @@ describe('Lamp Class', () => {
 
     expect(lamp.isDirty).to.be.true
     expect(lamp.light.hue).to.equal(require('../lib/default-config').hue.statuses.ok.hue)
+    expect(lamp.light.alert).to.equal('none')
     expect(saveMock).to.be.calledOnce
   })
 
