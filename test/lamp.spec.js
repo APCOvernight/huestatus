@@ -101,6 +101,76 @@ describe('Lamp Class', () => {
     expect(saveMock).to.be.calledOnce
   })
 
+  it('Register a module sets the status to null', async () => {
+    const lamp = new Lamp(mockConfig, lightMock, lightsMock)
+
+    lamp.registerModuleInstance('some-module')
+
+    expect(lamp.modules).to.deep.equal({'some-module': { status: null }})
+  })
+
+  it('Cannot register a duplicated module instance', async () => {
+    const lamp = new Lamp(mockConfig, lightMock, lightsMock)
+
+    lamp.registerModuleInstance('some-module')
+
+    try {
+      lamp.registerModuleInstance('some-module')
+      expect(0).to.equal(1)
+    } catch (e) {
+      expect(e.message).to.equal('Module with instanceName of some-module already registered')
+    }
+
+    expect(lamp.modules).to.deep.equal({'some-module': { status: null }})
+  })
+
+  it('A module instance can update the status', async () => {
+    mockConfig.debug = true
+    const lamp = new Lamp(mockConfig, lightMock, lightsMock)
+
+    lamp.registerModuleInstance('some-module')
+
+    await lamp._updateModuleStatus('some-module', 'ok', 'Some message')
+
+    expect(consoleMock).to.be.calledWith('some-module: Some message')
+    mockConfig.debug = false
+
+    expect(lamp.status).to.equal('ok')
+  })
+
+  it('Duplicate status is not pushed to the lamp again', async () => {
+    const lamp = new Lamp(mockConfig, lightMock, lightsMock)
+    const setStatusSpy = sinon.spy(lamp, '_setStatus')
+
+    lamp.registerModuleInstance('some-module')
+
+    await lamp._updateModuleStatus('some-module', 'ok', 'Some message')
+
+    expect(setStatusSpy).to.be.calledOnce
+
+    expect(lamp.status).to.equal('ok')
+
+    await lamp._updateModuleStatus('some-module', 'ok', 'Some message')
+
+    expect(setStatusSpy).to.be.calledOnce
+    setStatusSpy.restore()
+  })
+
+  it('A module instance cannot update the status if it has not been registered', async () => {
+    mockConfig.debug = true
+    const lamp = new Lamp(mockConfig, lightMock, lightsMock)
+
+    try {
+      await lamp._updateModuleStatus('some-module', 'ok', 'Some message')
+      expect(0).to.equal(1)
+    } catch (e) {
+      expect(e.message).to.equal('Module with instanceName of some-module not registered')
+    }
+
+    expect(consoleMock).to.not.be.calledWith('some-module: Some message')
+    mockConfig.debug = false
+  })
+
   it('Reset sets light back to initial state', async () => {
     const lamp = new Lamp(mockConfig, lightMock, lightsMock)
 

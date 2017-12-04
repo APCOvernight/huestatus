@@ -25,8 +25,10 @@ class Lamp extends BaseClass {
     this.initialState = this._getState()
 
     this.log(`  💡  ${this.name} is ${!this.light.reachable ? 'not ' : ''}reachable ${this.light.reachable ? '✅' : '⛔️'}`)
+  }
 
-    this.statusPrecedence = ['alert', 'warning', 'working', 'ok']
+  static get statusPrecedence () {
+    return ['alert', 'warning', 'working', 'ok']
   }
 
   /**
@@ -43,30 +45,36 @@ class Lamp extends BaseClass {
   }
 
   registerModuleInstance (instanceName) {
+    if (this.modules[instanceName]) {
+      throw new Error(`Module with instanceName of ${instanceName} already registered`)
+    }
+
     this.modules[instanceName] = { status: null }
   }
 
   async _updateModuleStatus (instanceName, status, message) {
-    // Throw here if module name not found
+    if (!this.modules[instanceName]) {
+      throw new Error(`Module with instanceName of ${instanceName} not registered`)
+    }
 
     this.modules[instanceName].status = status
     this.modules[instanceName].lastMessage = message
 
-    this.log(`${this.instanceName}: ${message}`)
+    this.log(`${instanceName}: ${message}`)
 
     await this._updateStatus()
   }
 
   _worstCaseScenario (statuses) {
-    let worstCase = this.statusPrecedence.length
+    let worstCase = Lamp.statusPrecedence.length
 
     statuses.map(status => {
-      if (this.statusPrecedence.includes(status)) {
-        worstCase = Math.min(worstCase, this.statusPrecedence.indexOf(status))
+      if (Lamp.statusPrecedence.includes(status)) {
+        worstCase = Math.min(worstCase, Lamp.statusPrecedence.indexOf(status))
       }
     })
 
-    return this.statusPrecedence[worstCase]
+    return Lamp.statusPrecedence[worstCase]
   }
 
   async _updateStatus () {
