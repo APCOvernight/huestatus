@@ -115,7 +115,7 @@ class Hue extends BaseClass {
         this.log(`${module.name} module loaded`)
       } catch (e) {
         // Throw nice errors here
-        console.error(e.message)
+        console.info(e.message)
         throw e
       }
     })
