@@ -151,6 +151,8 @@ describe('Hue Class', () => {
     expect(hue.modules[0].emitter).to.be.an('object')
     expect(hue.modules[0].config).to.be.an('object')
     expect(hue.modules[0].config).to.deep.equal(mockConfig.modules[0])
+    expect(hue.modules[0].start).to.be.a('function')
+    expect(hue.modules[0].instanceName).to.be.a('string')
 
     expect(consoleMock).to.be.calledWith('../test/mock-module module loaded')
 

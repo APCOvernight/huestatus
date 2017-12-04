@@ -142,4 +142,9 @@ describe('Status Precedence tests', function () {
     const newStatus = new Lamp(mockConfig, lightMock, lightsMock)._worstCaseScenario(['ok', 'working', 'alert', 'warning'])
     expect(newStatus).to.equal('alert')
   })
+
+  it('if unknown status is passed it is ignored', async () => {
+    const newStatus = new Lamp(mockConfig, lightMock, lightsMock)._worstCaseScenario(['fake', 'ok', null])
+    expect(newStatus).to.equal('ok')
+  })
 })
