@@ -15,7 +15,7 @@ module.exports = config => {
     testRunner: 'mocha',
     mutator: 'javascript',
     transpilers: [],
-    reporter: ['html', 'baseline', 'clear-text', 'progress'],
+    reporter: ['html', 'clear-text', 'progress'],
     testFramework: 'mocha',
     coverageAnalysis: 'off'
   })
