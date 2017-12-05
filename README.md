@@ -58,9 +58,11 @@ Then run `huestatus`, the app will connect to your hue, and load in all the defi
 
 ## Supported Modules
 
-Coming soon
+- HueKins - Jenkins build monitor -  [GitHub](https://github.com/APCOvernight/huekins) - [NPM](https://www.npmjs.com/package/huekins)
+- HueTry - Sentry issue alerts -  [GitHub](https://github.com/APCOvernight/huetry) - [NPM](https://www.npmjs.com/package/huetry)
+- HueTimeRobot - Uptime Robot monitor -  [GitHub](https://github.com/APCOvernight/huetimerobot) - [NPM](https://www.npmjs.com/package/huetimerobot)
 
 
 ## Module development guidelines
 
-Coming soon - In the meantime have a go by extending `src/Module.js`
+Visit [HueStatusModule](https://github.com/APCOvernight/HueStatusModule) For a template starter module with more instructions
