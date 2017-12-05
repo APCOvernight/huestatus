@@ -9,6 +9,7 @@ const Hue = require('../src/Hue')
 let HuejayMock
 let connectionMock
 let consoleMock
+let onStub
 
 const mockConfig = {
   hue: {
@@ -23,6 +24,7 @@ const mockConfig = {
 describe('Hue Class', () => {
   beforeEach(() => {
     consoleMock = sinon.stub(console, 'info')
+    onStub = sinon.stub(process, 'on')
 
     HuejayMock = sinon.stub(require('huejay'), 'Client').returns({
       bridge: {
@@ -35,13 +37,21 @@ describe('Hue Class', () => {
   })
 
   afterEach(() => {
+    onStub.restore()
     HuejayMock.restore()
     consoleMock.restore()
   })
 
+  it('Sets up process listeners', () => {
+    const hue = new Hue(mockConfig)
+    expect(hue.config).to.be.an('object')
+
+    expect(onStub).to.be.calledWith('SIGINT')
+    expect(onStub).to.be.calledWith('unhandledRejection')
+  })
+
   it('Loads config object', () => {
     const hue = new Hue(mockConfig)
-
     expect(hue.config).to.be.an('object')
     expect(hue.config.debug).to.be.false
 
@@ -215,15 +225,27 @@ describe('Hue Class', () => {
       name: 'My first light'
     }])
 
+    const exitStub = sinon.stub(process, 'exit')
+
     await hue.init()
 
     sinon.stub(hue.lamps['My first light'], 'reset')
 
-    await hue.stop()
+    await hue._sigIntHandler()
 
     expect(hue.lamps['My first light'].reset).to.be.calledOnce
+    expect(exitStub).to.be.calledOnce
 
+    exitStub.restore()
     hue.lamps['My first light'].reset.restore()
+  })
+
+  it('Catches unhandled rejection errors', async () => {
+    mockConfig.debug = true
+    const hue = new Hue(mockConfig)
+    hue._unhandledRejectionHandler(new Error('Some Error'))
+    expect(consoleMock).to.be.calledWith('Unhandled Promise Rejection', 'Some Error')
+    mockConfig.debug = false
   })
 
   it('Modules get started on start', async () => {

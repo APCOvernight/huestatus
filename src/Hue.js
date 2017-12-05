@@ -14,6 +14,7 @@ class Hue extends BaseClass {
    */
   constructor (config) {
     super(config)
+    this._registerListeners()
     this.log(`Loaded Config from ${config.config}:\n`, config)
 
     this.connection = new Huejay.Client({
@@ -22,6 +23,26 @@ class Hue extends BaseClass {
       username: config.hue.username,
       timeout: config.hue.timeout
     })
+  }
+
+  _registerListeners () {
+    process.on('SIGINT', this._sigIntHandler.bind(this))
+    process.on('unhandledRejection', this._unhandledRejectionHandler.bind(this))
+  }
+
+  /**
+   * Reset all lamps on process interruption
+   */
+  async _sigIntHandler () {
+    await this.stop()
+    process.exit()
+  }
+
+  /**
+   * Log unhandledRejections nicely
+   */
+  _unhandledRejectionHandler (error) {
+    this.log('Unhandled Promise Rejection', error.message)
   }
 
   /**
