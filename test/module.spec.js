@@ -7,7 +7,9 @@ const sinon = require('sinon')
 const events = require('events')
 const Module = require('../src/Module')
 
-const mockConfig = {}
+const mockConfig = {
+  name: 'mySuperModule'
+}
 
 describe('Module base class', () => {
   it('Should throw error if base start method is called', async () => {
@@ -27,6 +29,7 @@ describe('Module base class', () => {
     const module = new Module(mockConfig, new events.EventEmitter())
     const module2 = new Module(mockConfig, new events.EventEmitter())
     expect(module.generateInstanceName()).to.be.a('string')
+    expect(module.generateInstanceName()).to.match(/^mySuperModule/)
 
     expect(module.instanceName).to.not.equal(module2.instanceName)
   })

@@ -21,7 +21,7 @@ class BaseModule {
    * @return {String} Uuid
    */
   generateInstanceName () {
-    return uuidv4()
+    return `${this.config.name}-${uuidv4()}`
   }
 
   /**
