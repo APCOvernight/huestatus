@@ -6,7 +6,7 @@
 Modular status light system for use with Philips Hue devices
 
 ## Features
-- Set a philips hue light to one of 4 statuses (Ok, Warning, Building, Alert)
+- Set a Philips Hue light to one of 4 statuses (Ok, Warning, Building, Alert)
 - Works with multiple lights
 - Works with multiple modules
 
@@ -16,15 +16,15 @@ Modular status light system for use with Philips Hue devices
 npm install -g huestatus
 ```
 
-Create a .huerc file on your home directory, or the directory you will run HueStatus from. 
+Create a .huerc file on your home directory, or the directory you will run `huestatus` from. 
 
 ```js
 {
   "hue": {
-    "host": "192.168.0.2", // Hostname for your hue bridge
-    "port": 80, // Port of the hue bridge
-    "username": "", // Hue bridge API username - (See https://www.developers.meethue.com/documentation/getting-started)
-    "timeout": 2000, // Connection timeout for hue bridge requests
+    "host": "192.168.0.2", // Address of your Philips Hue Bridge
+    "port": 80, // Port of the Philips Hue Bridge
+    "username": "", // Philips Hue Bridge API username - (See https://www.developers.meethue.com/documentation/getting-started)
+    "timeout": 2000, // Connection timeout for Philips Hue Bridge requests
     "statuses": { // Settings for each status
       "working": {
         "hue": 46920, // Color Hue Key - Between 0 and 65535
@@ -54,7 +54,7 @@ Create a .huerc file on your home directory, or the directory you will run HueSt
 
 ```
 
-Then run `huestatus`, the app will connect to your hue, and load in all the defined modules then continue running, waiting for the modules to update the status. It is recommended to run HueStatus with a process manager like [PM2](https://npmjs.org/package/pm2)
+Then run `huestatus`.  `Huestatus` will connect to your Philips Hue Bridge, and load in all the configured modules then continue running, waiting for the modules to update the status. It is recommended to run `huestatus` with a process manager like [PM2](https://npmjs.org/package/pm2)
 
 ## Supported Modules
 
@@ -63,6 +63,6 @@ Then run `huestatus`, the app will connect to your hue, and load in all the defi
 - HueTimeRobot - Uptime Robot monitor -  [GitHub](https://github.com/APCOvernight/huetimerobot) - [NPM](https://www.npmjs.com/package/huetimerobot)
 
 
-## Module development guidelines
+## Module development template
 
-Visit [HueStatusModule](https://github.com/APCOvernight/HueStatusModule) For a template starter module with more instructions
+Visit [HueStatusModule](https://github.com/APCOvernight/HueStatusModule) For a template starter module with more instructions.
