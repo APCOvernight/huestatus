@@ -1,6 +1,6 @@
 {
   "name": "huestatus",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Modular status light system for use with Philips Hue devices",
   "main": "index.js",
   "scripts": {
