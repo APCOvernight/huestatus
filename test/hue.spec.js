@@ -143,7 +143,6 @@ describe('Hue Class', () => {
     expect(hue.lampsArray[0]).to.be.an('object')
     expect(hue.lampsArray[0].constructor.name).to.equal('Lamp')
 
-    expect(consoleMock).to.be.calledWith('\nLights connected:')
     expect(consoleMock).to.be.calledWith('  💡  My first light is not reachable ⛔️')
     expect(consoleMock).to.be.calledWith('  💡  Another light is reachable ✅')
 

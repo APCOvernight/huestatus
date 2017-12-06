@@ -116,7 +116,7 @@ class Hue extends BaseClass {
     const lamps = {}
     const lights = await this.connection.lights.getAll()
 
-    this.info('\nLights connected:')
+    this.debug('\nLights connected:')
 
     await Promise.all(lights.map(async light => {
       lamps[light.name] = new Lamp(this.config, light, this.connection.lights, this.reporters)
