@@ -40,5 +40,8 @@
       "light": "Hue color lamp 2"
     }
   ],
+  "reporters": [
+
+  ],
   "debug": true
 }

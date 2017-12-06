@@ -15,7 +15,8 @@ class Hue extends BaseClass {
   constructor (config) {
     super(config)
     this._registerListeners()
-    this.log(`Loaded Config from ${config.config}:\n`, config)
+    this.reporters = this._loadReporters()
+    this.info(`Loaded Config from ${config.config}:\n`, config)
 
     this.connection = new Huejay.Client({
       host: config.hue.host,
@@ -25,6 +26,9 @@ class Hue extends BaseClass {
     })
   }
 
+  /**
+   * Register process listeners
+   */
   _registerListeners () {
     process.on('SIGINT', this._sigIntHandler.bind(this))
     process.on('unhandledRejection', this._unhandledRejectionHandler.bind(this))
@@ -42,7 +46,7 @@ class Hue extends BaseClass {
    * Log unhandledRejections nicely
    */
   _unhandledRejectionHandler (error) {
-    this.log('Unhandled Promise Rejection', error.message)
+    this.error(error.message)
   }
 
   /**
@@ -75,10 +79,13 @@ class Hue extends BaseClass {
   }
 
   /**
-   * Fire the start method on all modules
+   * Fire the start method on all modules and reporters
    * @return {Promise}
    */
   async start () {
+    await Promise.all(this.reporters.map(async reporter => {
+      await reporter.start()
+    }))
     await Promise.all(this.modules.map(async module => {
       await module.start()
     }))
@@ -91,9 +98,9 @@ class Hue extends BaseClass {
   async _getBridge () {
     const bridge = await this.connection.bridge.get()
 
-    this.log(`Retrieved bridge ${bridge.name}`)
-    this.log(`  Id: ${bridge.id}`)
-    this.log(`  Model Id: ${bridge.modelId}`)
+    this.debug(`Retrieved bridge ${bridge.name}`)
+    this.debug(`  Id: ${bridge.id}`)
+    this.debug(`  Model Id: ${bridge.modelId}`)
 
     return bridge
   }
@@ -106,10 +113,10 @@ class Hue extends BaseClass {
     const lamps = {}
     const lights = await this.connection.lights.getAll()
 
-    this.log('\nLights connected:')
+    this.info('\nLights connected:')
 
     await Promise.all(lights.map(async light => {
-      lamps[light.name] = new Lamp(this.config, light, this.connection.lights)
+      lamps[light.name] = new Lamp(this.config, light, this.connection.lights, this.reporters)
     }))
 
     return lamps
@@ -139,7 +146,7 @@ class Hue extends BaseClass {
 
         modules.push(instance)
 
-        this.log(`${module.name} module loaded`)
+        this.debug(`${module.name} module loaded`)
       } catch (e) {
         console.info(e.message)
         throw e
@@ -147,6 +154,40 @@ class Hue extends BaseClass {
     })
 
     return modules
+  }
+
+  /**
+   * Load all reporters defined in config
+   * @return {Array.Object}
+   * @throws Error if reporter cannot be loaded
+   * @throws Error if reporter hasn't got start or log methods
+   */
+  _loadReporters () {
+    const reporters = []
+
+    const consoleReporterConfig = {
+      name: './ConsoleReporter',
+      logLevel: this.config.debug ? 'debug' : 'info'
+    }
+
+    this.config.reporters.concat([consoleReporterConfig]).map(reporter => {
+      try {
+        const Reporter = require(require('requireg').resolve(reporter.name) || reporter.name)
+        const instance = new Reporter(reporter)
+        instance.config = reporter
+
+        if (typeof instance.start !== 'function' || typeof instance.log !== 'function') {
+          throw new Error(`${reporter.name} reporter must have a start method and a log method`)
+        }
+
+        reporters.push(instance)
+      } catch (e) {
+        console.info(e.message)
+        throw e
+      }
+    })
+
+    return reporters
   }
 }
 

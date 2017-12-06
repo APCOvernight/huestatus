@@ -18,6 +18,7 @@ const mockConfig = {
     }
   },
   modules: [],
+  reporters: [],
   debug: false
 }
 
@@ -77,9 +78,28 @@ describe('Hue Class', () => {
     await hue.init()
 
     expect(hue.bridge).to.be.an('object')
-    expect(consoleMock).to.not.be.called
+    expect(consoleMock).to.not.be.calledWith('Retrieved bridge Hue Bridge')
 
     connectionMock.restore()
+  })
+
+  it('Loads default consoleReporter', () => {
+    const hue = new Hue(mockConfig)
+    expect(hue.reporters).to.be.an('array')
+  })
+
+  it('Starts reporters', async () => {
+    const hue = new Hue(mockConfig)
+    connectionMock = sinon.stub(hue.connection.lights, 'getAll').resolves([{
+      name: 'My first light'
+    }])
+
+    expect(hue.reporters).to.be.an('array')
+
+    await hue.init()
+    await hue.start()
+
+    expect(hue.reporters[0].started).to.equal(true)
   })
 
   it('Log bridge info on init if debug is set', async () => {
@@ -105,6 +125,9 @@ describe('Hue Class', () => {
     const hue = new Hue(mockConfig)
     connectionMock = sinon.stub(hue.connection.lights, 'getAll').resolves([{
       name: 'My first light'
+    }, {
+      name: 'Another light',
+      reachable: true
     }])
 
     await hue.init()
@@ -117,28 +140,11 @@ describe('Hue Class', () => {
     expect(hue.lampsArray[0]).to.be.an('object')
     expect(hue.lampsArray[0].constructor.name).to.equal('Lamp')
 
-    expect(consoleMock).to.not.be.called
-
-    connectionMock.restore()
-  })
-
-  it('Log lights info on init if debug is set', async () => {
-    mockConfig.debug = true
-    const hue = new Hue(mockConfig)
-    connectionMock = sinon.stub(hue.connection.lights, 'getAll').resolves([{
-      name: 'My first light'
-    }, {
-      name: 'Another light',
-      reachable: true
-    }])
-
-    await hue.init()
     expect(consoleMock).to.be.calledWith('\nLights connected:')
     expect(consoleMock).to.be.calledWith('  💡  My first light is not reachable ⛔️')
     expect(consoleMock).to.be.calledWith('  💡  Another light is reachable ✅')
 
     connectionMock.restore()
-    mockConfig.debug = false
   })
 
   it('Load modules on init', async () => {
@@ -219,6 +225,48 @@ describe('Hue Class', () => {
     mockConfig.debug = false
   })
 
+  it('Throws when the reporter cannot be found', async () => {
+    mockConfig.debug = true
+    mockConfig.reporters = [
+      {
+        name: 'null',
+        logLevel: 'info'
+      }
+    ]
+
+    try {
+      const hue = new Hue(mockConfig)
+      await hue.init()
+      expect(0).to.equal(1)
+    } catch (e) {
+      expect(e.message).to.equal('Cannot find module \'null\'')
+    }
+
+    mockConfig.reporters = []
+    mockConfig.debug = false
+  })
+
+  it('Throws when the reporter does not extend base reporter', async () => {
+    mockConfig.debug = true
+    mockConfig.reporters = [
+      {
+        name: '../test/bad-reporter',
+        logLevel: 'info'
+      }
+    ]
+
+    try {
+      const hue = new Hue(mockConfig)
+      await hue.init()
+      expect(0).to.equal(1)
+    } catch (e) {
+      expect(e.message).to.equal('../test/bad-reporter reporter must have a start method and a log method')
+    }
+
+    mockConfig.reporters = []
+    mockConfig.debug = false
+  })
+
   it('Fire reset on all lamps on stop', async () => {
     const hue = new Hue(mockConfig)
     connectionMock = sinon.stub(hue.connection.lights, 'getAll').resolves([{
@@ -244,7 +292,7 @@ describe('Hue Class', () => {
     mockConfig.debug = true
     const hue = new Hue(mockConfig)
     hue._unhandledRejectionHandler(new Error('Some Error'))
-    expect(consoleMock).to.be.calledWith('Unhandled Promise Rejection', 'Some Error')
+    expect(consoleMock).to.be.calledWith('Some Error')
     mockConfig.debug = false
   })
 

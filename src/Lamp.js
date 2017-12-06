@@ -8,11 +8,14 @@ class Lamp extends BaseClass {
    * @param  {Object} config Configuration
    * @param  {Object} light  HueJay Light instance
    * @param  {Object} lights HueJay Lights instance
+   * @param  {Array.Object} reporters Reporter instances (so that Lamp  can
+   *                                  fire the same reporters as Hue)
    */
-  constructor (config, light, lights) {
+  constructor (config, light, lights, reporters) {
     super(config)
     this.light = light
     this.lights = lights
+    this.reporters = reporters
     this.name = light.name
 
     this.isDirty = false
@@ -24,7 +27,7 @@ class Lamp extends BaseClass {
 
     this.initialState = this._getState()
 
-    this.log(`  💡  ${this.name} is ${!this.light.reachable ? 'not ' : ''}reachable ${this.light.reachable ? '✅' : '⛔️'}`)
+    this.info(`  💡  ${this.name} is ${!this.light.reachable ? 'not ' : ''}reachable ${this.light.reachable ? '✅' : '⛔️'}`)
   }
 
   static get statusPrecedence () {
@@ -71,9 +74,7 @@ class Lamp extends BaseClass {
     this.modules[instanceName].status = status
     this.modules[instanceName].lastMessage = message
 
-    this.log(`${instanceName}: ${message}`)
-
-    await this._updateStatus()
+    await this._updateStatus(instanceName, status, message)
   }
 
   /**
@@ -95,13 +96,20 @@ class Lamp extends BaseClass {
 
   /**
    * If the status has changed, send the new status to the light
+   * @param  {String}  instanceName
+   * @param  {String}  setStatus       The status to update it to
+   * @param  {String}  message      Message to be logged
    * @return {Promise}
    */
-  async _updateStatus () {
-    const status = this._worstCaseScenario(Object.keys(this.modules).map(moduleName => this.modules[moduleName].status))
+  async _updateStatus (instanceName, setStatus, message) {
+    const worstStatus = this._worstCaseScenario(Object.keys(this.modules).map(moduleName => this.modules[moduleName].status))
 
-    if (status !== this.status) {
-      await this._setStatus(status)
+    const hasChanged = worstStatus !== this.status
+
+    this.log(hasChanged ? 'info' : 'debug', message, setStatus, instanceName)
+
+    if (hasChanged) {
+      await this._setStatus(setStatus)
     }
   }
 

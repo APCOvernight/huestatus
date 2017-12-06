@@ -127,15 +127,43 @@ describe('Lamp Class', () => {
   })
 
   it('A module instance can update the status', async () => {
-    mockConfig.debug = true
-    const lamp = new Lamp(mockConfig, lightMock, lightsMock)
+    const ConsoleReporter = require('../src/ConsoleReporter')
+    const consoleReporterInstance = new ConsoleReporter()
+    consoleReporterInstance.config = { logLevel: 'info' }
+    const lamp = new Lamp(mockConfig, lightMock, lightsMock, [consoleReporterInstance])
 
     lamp.registerModuleInstance('some-module')
 
     await lamp._updateModuleStatus('some-module', 'ok', 'Some message')
 
-    expect(consoleMock).to.be.calledWith('some-module: Some message')
-    mockConfig.debug = false
+    expect(consoleMock).to.be.calledWith('some-module - Some message')
+
+    consoleMock.resetHistory()
+
+    await lamp._updateModuleStatus('some-module', 'ok', 'Some message')
+
+    expect(consoleMock).to.not.be.calledWith('some-module - Some message')
+
+    expect(lamp.status).to.equal('ok')
+  })
+
+  it('If status is the same debug is sent', async () => {
+    const ConsoleReporter = require('../src/ConsoleReporter')
+    const consoleReporterInstance = new ConsoleReporter()
+    consoleReporterInstance.config = { logLevel: 'debug' }
+    const lamp = new Lamp(mockConfig, lightMock, lightsMock, [consoleReporterInstance])
+
+    lamp.registerModuleInstance('some-module')
+
+    await lamp._updateModuleStatus('some-module', 'ok', 'Some message')
+
+    expect(consoleMock).to.be.calledWith('some-module - Some message')
+
+    consoleMock.resetHistory()
+
+    await lamp._updateModuleStatus('some-module', 'ok', 'Some message')
+
+    expect(consoleMock).to.be.calledWith('some-module - Some message')
 
     expect(lamp.status).to.equal('ok')
   })
@@ -195,6 +223,14 @@ describe('Lamp Class', () => {
 })
 
 describe('Status Precedence tests', function () {
+  beforeEach(() => {
+    consoleMock = sinon.stub(console, 'info')
+  })
+
+  afterEach(() => {
+    consoleMock.restore()
+  })
+
   it('if the statuses are OK, ALERT, then the status should become ALERT', async () => {
     const newStatus = new Lamp(mockConfig, lightMock, lightsMock)._worstCaseScenario(['ok', 'alert'])
     expect(newStatus).to.equal('alert')
