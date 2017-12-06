@@ -49,7 +49,14 @@ Create a .huerc file on your home directory, or the directory you will run `hues
       "organisation": ""
     }
   ],
-  "debug": true // Show logging info
+  "reporters": [ // Array of reporter modules and their settings
+    {
+      "name": "huelog-slack", // The name of the module. The module must be installed globally (i.e. npm i -g huekins)
+      "logLevel": "", // Level of logging to pass to this reporter (debug, info, error)
+      "slackWebhookUrl": "" // Settings specific to the module
+    }
+  ]
+  "debug": true // Show debug logging info in console
 }
 
 ```
@@ -58,11 +65,27 @@ Then run `huestatus`.  `Huestatus` will connect to your Philips Hue Bridge, and 
 
 ## Supported Modules
 
-- HueKins - Jenkins build monitor -  [GitHub](https://github.com/APCOvernight/huekins) - [NPM](https://www.npmjs.com/package/huekins)
-- HueTry - Sentry issue alerts -  [GitHub](https://github.com/APCOvernight/huetry) - [NPM](https://www.npmjs.com/package/huetry)
+- HueKins - Jenkins build monitor - [GitHub](https://github.com/APCOvernight/huekins) - [NPM](https://www.npmjs.com/package/huekins)
+- HueTry - Sentry issue alerts - [GitHub](https://github.com/APCOvernight/huetry) - [NPM](https://www.npmjs.com/package/huetry)
 - HueTimeRobot - Uptime Robot monitor -  [GitHub](https://github.com/APCOvernight/huetimerobot) - [NPM](https://www.npmjs.com/package/huetimerobot)
 
 
 ## Module development template
 
 Visit [HueStatusModule](https://github.com/APCOvernight/HueStatusModule) For a template starter module with more instructions.
+
+## Loggers/Reporters
+
+Status changes are logged to STDOUT by default. This can be helpful if you have several modules using the same light to find out what's caused it to turn red.
+
+But all team members may not have access to the terminal logs so reporters can be added to publish more accessible logs.
+
+## Supported Reporters
+
+- HueLog Slack - Push status changes to a slack channel [GitHub](https://github.com/APCOvernight/huelog-slack) - [NPM](https://www.npmjs.com/package/huelog-slack)
+
+- HueLog Status Page - Serve a webpage with a list of recent log events [GitHub](https://github.com/APCOvernight/huelog-statuspage) - [NPM](https://www.npmjs.com/package/huelog-statuspage)
+
+## Reporter development
+
+Reporters work in a similar way to [status modules](https://github.com/APCOvernight/HueStatusModule) but they don't have a base class to extend. All they need is a start and a log method. They are registered in the reporters array of `.huerc`.
