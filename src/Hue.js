@@ -83,6 +83,9 @@ class Hue extends BaseClass {
    * @return {Promise}
    */
   async start () {
+    setInterval(async () => {
+      await Promise.all(this.lampsArray.map(async lamp => lamp.forceUpdate()))
+    }, 10000)
     await Promise.all(this.reporters.map(async reporter => {
       await reporter.start()
     }))

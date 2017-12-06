@@ -95,6 +95,14 @@ class Lamp extends BaseClass {
   }
 
   /**
+   * Loop through registered modules and decide the worst of current statuses
+   * @return {String} status
+   */
+  _getWorstStatus () {
+    return this._worstCaseScenario(Object.keys(this.modules).map(moduleName => this.modules[moduleName].status))
+  }
+
+  /**
    * If the status has changed, send the new status to the light
    * @param  {String}  instanceName
    * @param  {String}  setStatus       The status to update it to
@@ -102,7 +110,7 @@ class Lamp extends BaseClass {
    * @return {Promise}
    */
   async _updateStatus (instanceName, setStatus, message) {
-    const worstStatus = this._worstCaseScenario(Object.keys(this.modules).map(moduleName => this.modules[moduleName].status))
+    const worstStatus = this._getWorstStatus()
 
     const hasChanged = worstStatus !== this.status
 
@@ -118,12 +126,19 @@ class Lamp extends BaseClass {
    * @param  {String}  [status] The name of the status
    * @return {Promise}
    */
-  async _setStatus (status) {
+  async _setStatus (status, force) {
     const settings = status ? this.config.hue.statuses[status] : this.initialState
 
-    await this._save(settings)
+    await this._save(settings, force)
 
+    this.isDirty = true
     this.status = status
+  }
+
+  async forceUpdate () {
+    if (Object.keys(this.modules).length) {
+      await this._setStatus(this._getWorstStatus(), true)
+    }
   }
 
   /**
@@ -135,15 +150,16 @@ class Lamp extends BaseClass {
    * @param  {Boolean}  settings.alert
    * @return {Promise}
    */
-  async _save (settings) {
+  async _save (settings, force) {
     this.light.hue = settings.hue
     this.light.saturation = settings.saturation
     this.light.brightness = settings.brightness
-    this.light.alert = settings.flashing ? 'lselect' : 'none'
 
-    await this.lights.save(this.light)
+    if (!force) {
+      this.light.alert = settings.flashing ? 'lselect' : 'none'
+    }
 
-    this.isDirty = true
+    return this.lights.save(this.light)
   }
 
   /**

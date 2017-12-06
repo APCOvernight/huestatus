@@ -220,6 +220,52 @@ describe('Lamp Class', () => {
 
     expect(saveMock).to.not.be.called
   })
+
+  it('Force update triggers a save', async () => {
+    const lamp = new Lamp(mockConfig, lightMock, lightsMock)
+
+    await lamp.warning()
+    expect(lamp.light.hue).to.equal(require('../lib/default-config').hue.statuses.warning.hue)
+
+    lamp.modules['My module Instance'] = {
+      status: 'alert'
+    }
+
+    await lamp.forceUpdate()
+
+    expect(lamp.light.hue).to.equal(require('../lib/default-config').hue.statuses.alert.hue)
+    expect(saveMock).to.be.calledTwice
+  })
+
+  it('Force update doesn\'t change alert setting', async () => {
+    const lamp = new Lamp(mockConfig, lightMock, lightsMock)
+
+    await lamp.alert()
+    expect(lamp.light.hue).to.equal(require('../lib/default-config').hue.statuses.alert.hue)
+
+    expect(lamp.light.alert).to.equal('lselect')
+
+    lamp.modules['My module Instance'] = {
+      status: 'warning'
+    }
+
+    await lamp.forceUpdate()
+
+    expect(lamp.light.alert).to.equal('lselect')
+
+    expect(lamp.light.hue).to.equal(require('../lib/default-config').hue.statuses.warning.hue)
+    expect(saveMock).to.be.calledTwice
+  })
+
+  it('Force update ignores lamps with no modules registered ', async () => {
+    const lamp = new Lamp(mockConfig, lightMock, lightsMock)
+
+    const setStatusMock = sinon.spy(lamp, '_setStatus')
+
+    await lamp.forceUpdate()
+
+    expect(setStatusMock).to.not.be.called
+  })
 })
 
 describe('Status Precedence tests', function () {

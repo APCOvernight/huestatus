@@ -97,7 +97,10 @@ describe('Hue Class', () => {
     expect(hue.reporters).to.be.an('array')
 
     await hue.init()
+
+    this.clock = sinon.useFakeTimers()
     await hue.start()
+    this.clock.restore()
 
     expect(hue.reporters[0].started).to.equal(true)
   })
@@ -313,12 +316,55 @@ describe('Hue Class', () => {
 
     sinon.stub(hue.modules[0], 'start')
 
+    this.clock = sinon.useFakeTimers()
     await hue.start()
+    this.clock.restore()
 
     expect(hue.modules[0].start).to.be.calledOnce
 
     hue.modules[0].start.restore
 
+    connectionMock.restore()
+    mockConfig.modules = []
+  })
+
+  it('Lamps get updated every 10 seconds in case light has been turned off', async () => {
+    mockConfig.modules = [
+      {
+        name: '../test/mock-module',
+        light: 'My first light'
+      }
+    ]
+
+    const hue = new Hue(mockConfig)
+    connectionMock = sinon.stub(hue.connection.lights, 'getAll').resolves([{
+      name: 'My first light'
+    }])
+
+    await hue.init()
+
+    const forceUpdateMock = sinon.stub(hue.lamps['My first light'], 'forceUpdate')
+
+    sinon.stub(hue.modules[0], 'start')
+
+    this.clock = sinon.useFakeTimers()
+    await hue.start()
+
+    this.clock.tick(9000)
+
+    expect(forceUpdateMock).to.not.be.called
+
+    this.clock.tick(2000)
+
+    expect(forceUpdateMock).to.be.calledOnce
+
+    this.clock.restore()
+
+    expect(hue.modules[0].start).to.be.calledOnce
+
+    hue.modules[0].start.restore
+
+    forceUpdateMock.restore()
     connectionMock.restore()
     mockConfig.modules = []
   })
