@@ -129,10 +129,10 @@ class Lamp extends BaseClass {
   async _setStatus (status, force) {
     const settings = status ? this.config.hue.statuses[status] : this.initialState
 
-    await this._save(settings, force)
-
     this.isDirty = true
     this.status = status
+
+    await this._save(settings, force)
   }
 
   async forceUpdate () {
