@@ -66,6 +66,7 @@ Then run `huestatus`.  `Huestatus` will connect to your Philips Hue Bridge, and 
 ## Supported Modules
 
 - HueKins - Jenkins build monitor - [GitHub](https://github.com/APCOvernight/huekins) - [NPM](https://www.npmjs.com/package/huekins)
+- HueTravis - Travis CI build monitor - [GitHub](https://github.com/APCOvernight/huetravis) - [NPM](https://www.npmjs.com/package/huetravis)
 - HueTry - Sentry issue alerts - [GitHub](https://github.com/APCOvernight/huetry) - [NPM](https://www.npmjs.com/package/huetry)
 - HueTimeRobot - Uptime Robot monitor -  [GitHub](https://github.com/APCOvernight/huetimerobot) - [NPM](https://www.npmjs.com/package/huetimerobot)
 
