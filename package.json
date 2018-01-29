@@ -18,7 +18,7 @@
     "uuid": "^3.1.0"
   },
   "devDependencies": {
-    "apc-style": "^0.4.3",
+    "apc-style": "^1.0.0",
     "apc-test": "^1.0.0"
   },
   "repository": {
