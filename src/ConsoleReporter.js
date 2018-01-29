@@ -1,9 +1,11 @@
 'use strict'
 
+/**
+ * HueStatus reporter that logs to console
+ */
 class ConsoleReporter {
   /**
    * Called to fire up reporter
-   * @return {Promise}
    */
   async start () {
     this.started = true

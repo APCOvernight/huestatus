@@ -44,6 +44,7 @@ class Hue extends BaseClass {
 
   /**
    * Log unhandledRejections nicely
+   * @param  {Error} error Error object
    */
   _unhandledRejectionHandler (error) {
     this.error(error.message)
@@ -73,24 +74,23 @@ class Hue extends BaseClass {
    * @return {Promise}
    */
   async stop () {
-    await Promise.all(this.lampsArray.map(async lamp => {
-      await lamp.reset()
+    return Promise.all(this.lampsArray.map(async lamp => {
+      return lamp.reset()
     }))
   }
 
   /**
    * Fire the start method on all modules and reporters
-   * @return {Promise}
    */
   async start () {
     setInterval(async () => {
-      await Promise.all(this.lampsArray.map(async lamp => lamp.forceUpdate()))
+      return Promise.all(this.lampsArray.map(async lamp => lamp.forceUpdate()))
     }, 10000)
     await Promise.all(this.reporters.map(async reporter => {
-      await reporter.start()
+      return reporter.start()
     }))
     await Promise.all(this.modules.map(async module => {
-      await module.start()
+      return module.start()
     }))
   }
 

@@ -32,7 +32,7 @@ class BaseModule {
    * @return {Promise}
    */
   async change (status, message) {
-    await this.emitter.emit('change', this.instanceName, status, message)
+    return this.emitter.emit('change', this.instanceName, status, message)
   }
 
   /**
