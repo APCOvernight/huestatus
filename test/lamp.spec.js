@@ -268,7 +268,7 @@ describe('Lamp Class', () => {
   })
 })
 
-describe('Status Precedence tests', function () {
+describe('Status Precedence tests', () => {
   beforeEach(() => {
     consoleMock = sinon.stub(console, 'info')
   })

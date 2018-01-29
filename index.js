@@ -4,6 +4,9 @@
 
 const Hue = require('./src/Hue')
 
+/**
+ * Start the HueStatus service
+ */
 const startHue = async () => {
   // Load config from file
   try {

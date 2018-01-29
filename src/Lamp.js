@@ -3,6 +3,10 @@
 const BaseClass = require('./Class')
 const events = require('events')
 
+/**
+ * Class representing on hue bulb
+ * @extends BaseClass
+ */
 class Lamp extends BaseClass {
   /**
    * @param  {Object} config Configuration
@@ -30,6 +34,10 @@ class Lamp extends BaseClass {
     this.info(`  💡  ${this.name} is ${!this.light.reachable ? 'not ' : ''}reachable ${this.light.reachable ? '✅' : '⛔️'}`)
   }
 
+  /**
+   * Precedence of statuses
+   * @type {Array.String}
+   */
   static get statusPrecedence () {
     return ['alert', 'warning', 'working', 'ok']
   }
@@ -74,7 +82,7 @@ class Lamp extends BaseClass {
     this.modules[instanceName].status = status
     this.modules[instanceName].lastMessage = message
 
-    await this._updateStatus(instanceName, status, message)
+    return this._updateStatus(instanceName, status, message)
   }
 
   /**
@@ -117,13 +125,14 @@ class Lamp extends BaseClass {
     this.log(hasChanged ? 'info' : 'debug', message, setStatus, instanceName)
 
     if (hasChanged) {
-      await this._setStatus(setStatus)
+      return this._setStatus(setStatus)
     }
   }
 
   /**
    * Set a lamp to a status and save. If no status given it will reset to initial
    * @param  {String}  [status] The name of the status
+   * @param  {Boolean} force Force an update even if status already set
    * @return {Promise}
    */
   async _setStatus (status, force) {
@@ -132,12 +141,16 @@ class Lamp extends BaseClass {
     this.isDirty = true
     this.status = status
 
-    await this._save(settings, force)
+    return this._save(settings, force)
   }
 
+  /**
+   * Force lamp to be updated (with worst status)
+   * @return {Promise}
+   */
   async forceUpdate () {
     if (Object.keys(this.modules).length) {
-      await this._setStatus(this._getWorstStatus(), true)
+      return this._setStatus(this._getWorstStatus(), true)
     }
   }
 
@@ -148,6 +161,7 @@ class Lamp extends BaseClass {
    * @param  {Number}  settings.brightness
    * @param  {Number}  settings.saturation
    * @param  {Boolean}  settings.alert
+   * @param  {Boolean} force Force an update even if status already set
    * @return {Promise}
    */
   async _save (settings, force) {
@@ -169,7 +183,7 @@ class Lamp extends BaseClass {
    * @return {Promise}
    */
   async alert (message) {
-    await this._setStatus('alert')
+    return this._setStatus('alert')
   }
 
   /**
@@ -179,7 +193,7 @@ class Lamp extends BaseClass {
    * @return {Promise}
    */
   async warning (message) {
-    await this._setStatus('warning')
+    return this._setStatus('warning')
   }
 
   /**
@@ -189,17 +203,17 @@ class Lamp extends BaseClass {
    * @return {Promise}
    */
   async ok (message) {
-    await this._setStatus('ok')
+    return this._setStatus('ok')
   }
 
   /**
    * Set the lamp to working (building) mode
    * @param  {String}  message message to be sent to debug log
    *                           (why are you changing status)
-   * @return {Promise}         [description]
+   * @return {Promise}
    */
   async working (message) {
-    await this._setStatus('working')
+    return this._setStatus('working')
   }
 
   /**
@@ -208,7 +222,7 @@ class Lamp extends BaseClass {
    */
   async reset () {
     if (this.isDirty) {
-      await this._setStatus()
+      return this._setStatus()
     }
   }
 }
