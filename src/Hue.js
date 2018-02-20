@@ -48,6 +48,7 @@ class Hue extends BaseClass {
    */
   _unhandledRejectionHandler (error) {
     this.error(error.message)
+    console.error(error)
   }
 
   /**
