@@ -6,7 +6,7 @@
   "scripts": {
     "test": "npm run lint && nyc mocha",
     "lint": "eslint *.js test/**/*.js src/**/*.js lib/**/*.js ",
-    "coverage": "nyc report --reporter=text-lcov | coveralls && nyc report --reporter=text-lcov | codeclimate-test-reporter",
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
     "stryker": "stryker run"
   },
   "author": "Ian Egner <https://twitter.com/ianegner>",
@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "apc-style": "^1.0.1",
-    "apc-test": "^1.0.0"
+    "apc-test": "^1.1.0"
   },
   "repository": {
     "type": "git",
@@ -56,7 +56,8 @@
       "text",
       "text-summary",
       "html",
-      "cobertura"
+      "cobertura",
+      "lcov"
     ],
     "cache": true
   }
