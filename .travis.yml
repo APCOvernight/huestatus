@@ -9,3 +9,6 @@ before_script:
 after_script:
   - npm run coverage
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+notifications:
+    webhooks: https://www.travisbuddy.com/
+    on_success: never
