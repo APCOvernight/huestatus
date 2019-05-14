@@ -12,7 +12,7 @@
   "author": "Ian Egner <https://twitter.com/ianegner>",
   "license": "MIT",
   "dependencies": {
-    "huejay": "^1.7.3",
+    "huejay": "1.8.5",
     "rc": "^1.2.2",
     "requireg": "^0.1.7",
     "uuid": "^3.1.0"
