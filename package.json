@@ -14,7 +14,7 @@
   "dependencies": {
     "huejay": "^1.7.3",
     "rc": "^1.2.2",
-    "requireg": "^0.1.7",
+    "requireg": "^0.2.2",
     "uuid": "^3.1.0"
   },
   "devDependencies": {
