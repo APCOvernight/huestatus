@@ -194,7 +194,7 @@ describe('Hue Class', () => {
       await hue.init()
       expect(0).to.equal(1)
     } catch (e) {
-      expect(e.message).to.equal('Cannot find module \'null\'')
+      expect(e.message.split('\n')[0]).to.equal('Cannot find module \'null\'')
     }
 
     mockConfig.modules = []
@@ -241,7 +241,7 @@ describe('Hue Class', () => {
       await hue.init()
       expect(0).to.equal(1)
     } catch (e) {
-      expect(e.message).to.equal('Cannot find module \'null\'')
+      expect(e.message.split('\n')[0]).to.equal('Cannot find module \'null\'')
     }
 
     mockConfig.reporters = []
