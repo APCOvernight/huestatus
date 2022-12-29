@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "apc-style": "1.2.0",
-    "apc-test": "1.1.0"
+    "apc-test": "1.2.0"
   },
   "repository": {
     "type": "git",
